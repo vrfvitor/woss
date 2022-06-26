@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="card-header">
+    PROCESSES
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex flex-column mt-2" *ngFor="let process of processes">
+      <span [style.color]="process.colorHex">{{process.name}}</span>
+      <span>{{process.state}}</span>
+      <span>{{process.pc}}</span>
+    </li>
+  </ul>
+</div>
