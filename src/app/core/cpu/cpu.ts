@@ -1,6 +1,12 @@
 import Process from "../process/process";
-import { ProcessesService } from "../process/processes.service";
-import { IoProcessesService } from "../process/io-processes.service";
+import { Store } from "@ngrx/store";
+import {
+  incrementCounter,
+  toDoneState,
+  toExecutingState,
+  toWaitingState
+} from "../../state/processes/processes.actions";
+import { addToIoQueue } from "../../state/io-queue/io-queue.actions";
 
 export class CPU {
 
@@ -8,38 +14,49 @@ export class CPU {
   timeSlice?: number;
   shallExecute = true;
 
-  constructor(
-    private processesService: ProcessesService,
-    clock: number = 200,
-    timeSlice?: number
-  ) {
+  constructor(private store: Store, clock: number = 200, timeSlice?: number) {
     this.clock = clock;
     this.timeSlice = timeSlice;
   }
 
-  async execute(process: Process, ioProcessesService: IoProcessesService) {
-    this.processesService.toState(process, "EXECUTING")
+  async execute(process: Process) {
+    process = this.setToExecutingState(process);
+
     do {
-      await this.executeInstruction();
-      this.processesService.incrementCounter(process)
+      await this.executeGivenInstructionOf(process);
+
       if (this.isFinished(process)) {
-        this.processesService.toState(process, 'DONE')
+        this.store.dispatch(toDoneState({pid: process.pid}))
         break
       }
+
       if (process.bound == "IO") {
-        this.processesService.toState(process, "IO")
-        ioProcessesService.addProcess(process);
+        this.sendToIoQueue(process);
         break
       }
-    } while (this.shallExecute && !this.isFinished(process))
+
+    } while (this.shallExecute)
   }
 
-  private async executeInstruction() {
+  private sendToIoQueue(process: Process) {
+    this.store.dispatch(toWaitingState({pid: process.pid}));
+    this.store.dispatch(addToIoQueue({process}));
+  }
+
+  private setToExecutingState(process: Process) {
+    process = {...process}
+    this.store.dispatch(toExecutingState({pid: process.pid}))
+    return process;
+  }
+
+  private async executeGivenInstructionOf(process: Process) {
     await new Promise(r => setTimeout(r, this.clock));
+    this.store.dispatch(incrementCounter({pid: process.pid}))
+    process.pc++;
   }
 
   isFinished(proc: Process) {
-    return proc.pc! === proc.amountInstrucs
+    return proc.pc === proc.amountInstrucs
   }
 
 }

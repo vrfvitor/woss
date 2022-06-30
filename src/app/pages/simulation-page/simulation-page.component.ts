@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import Process from "../../core/process/process";
-import { ProcessesService } from "../../core/process/processes.service";
-import { IoProcessesService } from "../../core/process/io-processes.service";
 import System from "../../core/system/system";
+import { Store } from "@ngrx/store";
+import { selectIoQueueProgress, selectProcesses } from "../../state/processes.selectors";
 
 @Component({
   selector: 'app-simulation-page',
@@ -15,18 +15,16 @@ export class SimulationPageComponent implements OnInit {
   processes$!: Observable<Process[]>
   ioProgress$!: Observable<number>
 
-  constructor(
-    private processesService: ProcessesService,
-    private ioProcessesService: IoProcessesService
-  ) {
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
-    this.processes$ = this.processesService.getProcesses()
-    this.ioProgress$ = this.ioProcessesService.getProgress()
+    this.processes$ = this.store.select(selectProcesses)
+    this.ioProgress$ = this.store.select(selectIoQueueProgress)
   }
 
   onStart() {
-    new System(this.processesService, this.ioProcessesService)
+    console.log("System Started")
+    new System(this.store)
   }
 }
