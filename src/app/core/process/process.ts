@@ -1,14 +1,16 @@
+import BoundType from "./bound-type";
+
 export default class Process {
   pid: number;
   name: string;
   colorHex: string;
-  amountInstrucs: number;
+  amountInstructs: number;
   pc: number;
-  bound: 'CPU' | 'IO';
+  bound: BoundType;
   dateCreation: Date;
   state: 'READY' | 'IO' | 'EXECUTING' | 'DONE';
 
-  constructor(pid: number, name: string, colorHex: string, bound: "CPU" | "IO", dateCreation: Date, state: "READY" | "IO" | "EXECUTING" | "DONE", amountInstrucs: number = -1, pc: number = 0) {
+  constructor(pid: number, name: string, colorHex: string, bound: BoundType, dateCreation: Date, state: "READY" | "IO" | "EXECUTING" | "DONE", amountInstructs: number = -1, pc: number = 0) {
     this.pid = pid;
     this.name = name;
     this.colorHex = colorHex;
@@ -16,7 +18,7 @@ export default class Process {
     this.dateCreation = dateCreation;
     this.state = state;
 
-    this.amountInstrucs = amountInstrucs;
+    this.amountInstructs = amountInstructs;
     this.pc = pc;
   }
 

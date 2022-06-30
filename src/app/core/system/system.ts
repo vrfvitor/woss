@@ -6,6 +6,7 @@ import { Store } from "@ngrx/store";
 import {
   allProcessesFinished,
   finishedIoRequest,
+  selectIoCurrent,
   selectReadyProcesses,
   shallHandleIoRequest
 } from "../../state/processes.selectors";
@@ -15,6 +16,7 @@ import {
   reportIoProgress
 } from "../../state/io-queue/io-queue.actions";
 import { toReadyState } from "../../state/processes/processes.actions";
+import { filter, firstValueFrom } from "rxjs";
 
 export default class System {
 
@@ -23,7 +25,7 @@ export default class System {
 
   schedulingAlgo!: SchedulingAlgorithm;
   cpu!: CPU;
-  ioDelayTime: number = 500;
+  defaultIoTime: number = 500;
 
   constructor(
     private store: Store
@@ -59,18 +61,30 @@ export default class System {
   }
 
   async handleIoCall() {
-    this.store.dispatch(handleIoRequestOfHeadProcess())
-    let finishedHandling = ''
-    while (!finishedHandling) {
-      this.store.select(finishedIoRequest).subscribe(s => finishedHandling = s).unsubscribe();
+    const process = await this.beginDataTransferForDequeuedProcess();
+    while (!await this.ioDataTransferComplete()) {
+      await this.timerOf(this.defaultIoTime * process!.bound.delayFactor)
       this.store.dispatch(reportIoProgress())
-      await this.timerOf(this.ioDelayTime)
     }
-    this.store.dispatch(toReadyState({pid: parseInt(finishedHandling)}))
+    this.completeIoRequest(process);
+  }
+
+  private async beginDataTransferForDequeuedProcess() {
+    this.store.dispatch(handleIoRequestOfHeadProcess())
+    return await firstValueFrom(this.store.select(selectIoCurrent).pipe(filter(p => !!p)))
+  }
+
+  private ioDataTransferComplete() {
+    return firstValueFrom(this.store.select(finishedIoRequest));
+  }
+
+  private completeIoRequest(process: Process | null) {
+    this.store.dispatch(toReadyState({pid: process!.pid}))
     this.store.dispatch(completeIoRequest())
   }
 
   watchForReadyProcess = () => this.timerOf(this.cpu.clock * 1.5);
+
   timerOf = async (timeMs: number) => await new Promise(r => setTimeout(r, timeMs));
 
 }

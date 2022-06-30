@@ -18,7 +18,7 @@ export const allProcessesFinished = createSelector(
 
 export const finishedIoRequest = createSelector(
   selectIoQueue,
-  (state) => state.progress >= 1 ? state.executing!.pid.toString() : ''
+  (state) => state.progress >= 1
 );
 
 export const shallHandleIoRequest = createSelector(
@@ -31,3 +31,7 @@ export const selectIoQueueProgress = createSelector(
   (state) => state.progress
 );
 
+export const selectIoCurrent = createSelector(
+  selectIoQueue,
+  (state) => state.executing
+);

@@ -7,6 +7,7 @@ import {
   toWaitingState
 } from "../../state/processes/processes.actions";
 import { addToIoQueue } from "../../state/io-queue/io-queue.actions";
+import BoundType from "../process/bound-type";
 
 export class CPU {
 
@@ -30,7 +31,7 @@ export class CPU {
         break
       }
 
-      if (process.bound == "IO") {
+      if (process.bound !== BoundType.CPU) {
         this.sendToIoQueue(process);
         break
       }
@@ -56,7 +57,7 @@ export class CPU {
   }
 
   isFinished(proc: Process) {
-    return proc.pc === proc.amountInstrucs
+    return proc.pc === proc.amountInstructs
   }
 
 }

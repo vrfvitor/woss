@@ -8,14 +8,15 @@ import {
   toReadyState,
   toWaitingState
 } from "./processes.actions";
+import BoundType from "../../core/process/bound-type";
 
 export const initialState: Process[] = [
   {
     pid: 2134,
     pc: 0,
     name: 'web-app',
-    amountInstrucs: 5,
-    bound: 'IO',
+    amountInstructs: 5,
+    bound: BoundType.IO_DISC,
     colorHex: '#A00',
     dateCreation: new Date(),
     state: "READY",
@@ -23,8 +24,8 @@ export const initialState: Process[] = [
   {
     pid: 2135,
     name: 'browser',
-    amountInstrucs: 5,
-    bound: 'CPU',
+    amountInstructs: 5,
+    bound: BoundType.IO_TAPE,
     colorHex: '#0A0',
     dateCreation: new Date(),
     state: "READY",
@@ -33,8 +34,8 @@ export const initialState: Process[] = [
   {
     pid: 2136,
     name: 'tx-editor',
-    amountInstrucs: 5,
-    bound: 'IO',
+    amountInstructs: 5,
+    bound: BoundType.IO_TERMINAL,
     colorHex: '#00A',
     dateCreation: new Date(),
     state: "READY",
