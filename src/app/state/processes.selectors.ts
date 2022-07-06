@@ -1,19 +1,47 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { IoQueueState } from "./io-queue/io-queue.reducer";
-import Process from "../core/process/process";
+import { ProcessManagementState } from "./processes/process-management.reducer";
+import { TimeBasedScheduler } from "../core/cpu/scheduler/scheduling-algorithm";
 
 export const selectIoQueue = createFeatureSelector<IoQueueState>('ioQueue');
 
-export const selectProcesses = createFeatureSelector<Process[]>('processes');
+export const selectProcessManagement = createFeatureSelector<ProcessManagementState>('processManagement');
+
+export const selectProcesses = createSelector(
+  selectProcessManagement,
+  (state) => state.processes
+);
 
 export const selectReadyProcesses = createSelector(
   selectProcesses,
-  (state) => state.filter(p => p.state === 'READY')
+  (processes) => processes.filter(p => p.state === 'READY')
+);
+
+export const selectHasReadyProcesses = createSelector(
+  selectProcesses,
+  (processes) => processes.some(p => p.state === 'READY')
+);
+
+export const selectScheduledProcess = createSelector(
+  selectProcessManagement,
+  (state) => state.scheduled
+);
+
+export const selectShallExecute = createSelector(
+  selectProcessManagement,
+  (state) => !state.preempt
+);
+
+export const selectIsPreemptive = createSelector(
+  selectProcessManagement,
+  (state) => {
+    return state.scheduler instanceof TimeBasedScheduler ? state.scheduler.timeSlice : null
+  }
 );
 
 export const allProcessesFinished = createSelector(
-  selectProcesses,
-  (state) => state.every(p => p.state === 'DONE')
+  selectProcessManagement,
+  (state) => state.processes.every(p => p.state === 'DONE')
 );
 
 export const finishedIoRequest = createSelector(

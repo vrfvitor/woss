@@ -1,23 +1,26 @@
 import Process from "../process/process";
 import { Store } from "@ngrx/store";
 import {
-  incrementCounter,
+  incrementCounter, processLeftExecution,
   toDoneState,
-  toExecutingState,
+  toExecutingState, toReadyState,
   toWaitingState
-} from "../../state/processes/processes.actions";
+} from "../../state/processes/process-management.actions";
 import { addToIoQueue } from "../../state/io-queue/io-queue.actions";
 import BoundType from "../process/bound-type";
+import { selectShallExecute } from "../../state/processes.selectors";
 
 export class CPU {
 
-  clock: number;
-  timeSlice?: number;
-  shallExecute = true;
+  clock: number
+  timeSlice?: number
+  shallExecute = true
 
-  constructor(private store: Store, clock: number = 200, timeSlice?: number) {
-    this.clock = clock;
-    this.timeSlice = timeSlice;
+  constructor(private store: Store, clock: number = 250, timeSlice?: number) {
+    this.clock = clock
+    this.timeSlice = timeSlice
+    this.store.select(selectShallExecute)
+      .subscribe(r => this.shallExecute = r)
   }
 
   async execute(process: Process) {
@@ -28,15 +31,18 @@ export class CPU {
 
       if (this.isFinished(process)) {
         this.store.dispatch(toDoneState({pid: process.pid}))
-        break
+        return
       }
 
       if (process.bound !== BoundType.CPU) {
         this.sendToIoQueue(process);
-        break
+        return
       }
 
     } while (this.shallExecute)
+
+    this.store.dispatch(toReadyState({pid: process.pid}))
+    this.store.dispatch(processLeftExecution());
   }
 
   private sendToIoQueue(process: Process) {

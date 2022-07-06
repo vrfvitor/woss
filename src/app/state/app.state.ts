@@ -1,7 +1,7 @@
-import * as Process from "process";
 import { IoQueueState } from "./io-queue/io-queue.reducer";
+import { ProcessManagementState } from "./processes/process-management.reducer";
 
 export interface AppState {
-  processes: typeof Process[];
+  processesManagement: ProcessManagementState;
   ioQueue: IoQueueState;
 }

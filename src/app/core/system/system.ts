@@ -1,13 +1,12 @@
-import { FIFO } from "../cpu/scheduler/fifo";
 import { CPU } from "../cpu/cpu";
 import Process from "../process/process";
-import { SchedulingAlgorithm } from "../cpu/scheduler/scheduling-algorithm";
 import { Store } from "@ngrx/store";
 import {
   allProcessesFinished,
   finishedIoRequest,
+  selectHasReadyProcesses,
   selectIoCurrent,
-  selectReadyProcesses,
+  selectScheduledProcess,
   shallHandleIoRequest
 } from "../../state/processes.selectors";
 import {
@@ -15,7 +14,7 @@ import {
   handleIoRequestOfHeadProcess,
   reportIoProgress
 } from "../../state/io-queue/io-queue.actions";
-import { toReadyState } from "../../state/processes/processes.actions";
+import { scheduleNextProcess, toReadyState } from "../../state/processes/process-management.actions";
 import { filter, firstValueFrom } from "rxjs";
 
 export default class System {
@@ -23,36 +22,29 @@ export default class System {
   processes!: Process[];
   isExecuting = true;
 
-  schedulingAlgo!: SchedulingAlgorithm;
   cpu!: CPU;
   defaultIoTime: number = 500;
 
-  constructor(
-    private store: Store
-  ) {
-    this.schedulingAlgo = new FIFO()
+  constructor(private store: Store) {
+    console.log("System Started")
     this.cpu = new CPU(this.store, 1000)
-    this.store.select(allProcessesFinished).subscribe(allDone => this.isExecuting = !allDone);
+    this.store.select(allProcessesFinished).subscribe(allDone => this.isExecuting = !allDone)
     this.initIoSubsystem()
     this.init()
   }
 
   async init() {
     while (this.isExecuting) {
+      await this.timerOf(200)
       const nextProcess = await this.scheduleNextProcess()
-      await this.cpu.execute(nextProcess)
+      await this.cpu.execute(nextProcess!)
     }
   }
 
   async scheduleNextProcess() {
-    do {
-      this.store.select(selectReadyProcesses)
-      .subscribe(processes => this.processes = processes)
-      .unsubscribe()
-      if (!this.processes.length) await this.watchForReadyProcess()
-    } while (!this.processes.length)
-
-    return this.schedulingAlgo.next(this.processes)
+    await firstValueFrom(this.store.select(selectHasReadyProcesses).pipe(filter(r => r)))
+    this.store.dispatch(scheduleNextProcess());
+    return await firstValueFrom(this.store.select(selectScheduledProcess).pipe(filter(p => !!p)))
   }
 
   initIoSubsystem() {
