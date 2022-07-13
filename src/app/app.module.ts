@@ -10,6 +10,9 @@ import { ioQueueReducer } from "./state/io-queue/io-queue.reducer";
 import { processManagementReducer } from "./state/processes/process-management.reducer";
 import { EffectsModule } from '@ngrx/effects';
 import { ProcessManagementEffects } from "./state/processes/process-management.effects";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -18,10 +21,13 @@ import { ProcessManagementEffects } from "./state/processes/process-management.e
     ProcessesSectionComponent
   ],
   imports: [
-    EffectsModule.forRoot([ProcessManagementEffects]),
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot({processManagement: processManagementReducer, ioQueue: ioQueueReducer}),
+    EffectsModule.forRoot([ProcessManagementEffects]),
+    BsDropdownModule,
+    ModalModule.forRoot(),
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

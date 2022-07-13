@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { map, Observable } from "rxjs";
 import Process from "../../core/process/process";
 import System from "../../core/system/system";
@@ -7,6 +7,10 @@ import { selectIoQueueProgress, selectProcesses } from "../../state/processes.se
 import BoundType from "../../core/process/bound-type";
 import { addProcess, setupSchedulingAlgo } from "../../state/processes/process-management.actions";
 import { PreemptivePriority } from "../../core/cpu/scheduler/preemptive-priority";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FIFO } from "../../core/cpu/scheduler/fifo";
+import { RoundRobin } from "../../core/cpu/scheduler/round-robin";
 
 const byDate = (a: Process, b: Process) => (a.pid - b.pid)
 
@@ -66,19 +70,41 @@ export class SimulationPageComponent implements OnInit {
 
   processes$!: Observable<Process[]>
   ioProgress$!: Observable<number>
+  modalRef!: BsModalRef
+  settingsForm!: FormGroup
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private modalService: BsModalService,
+    private formBuilder: FormBuilder,
+  ) {
   }
 
   ngOnInit(): void {
     this.processes$ = this.store.select(selectProcesses)
       .pipe(map(pcs => [...pcs].sort(byDate)))
     this.ioProgress$ = this.store.select(selectIoQueueProgress)
-    this.store.dispatch(setupSchedulingAlgo({scheduler: new PreemptivePriority(2000)}))
-    PROCESSES.forEach(p => this.store.dispatch(addProcess({process: p})))
+    this.settingsForm = this.formBuilder.group({
+      schedulingAlgo: ['fifo', Validators.required]
+    })
   }
 
   onStart() {
+    PROCESSES.forEach(p => this.store.dispatch(addProcess({process: p})))
     new System(this.store)
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+    this.modalRef.onHide?.subscribe(() => {
+      const algo = this.settingsForm.value.schedulingAlgo
+
+      const map = new Map()
+      map.set('fifo', new FIFO());
+      map.set('roundRobin', new RoundRobin(2000));
+      map.set('preemptivePriority', new PreemptivePriority(2000));
+
+      this.store.dispatch(setupSchedulingAlgo({scheduler: map.get(algo)}))
+    })
   }
 }
