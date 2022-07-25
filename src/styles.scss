@@ -4,5 +4,31 @@
   background-color: #1b2531 !important
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.nice-scroll-bar {
+  scrollbar-base-color: #757575;
+}
+
+.nice-scroll-bar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #888888;
+}
+
+.nice-scroll-bar::-webkit-scrollbar {
+  width: 8px;
+  background-color: #F5F5F5;
+}
+
+.nice-scroll-bar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
+}

@@ -42,7 +42,7 @@ export const PROCESSES: Process[] = [
     name: 'tx-editor',
     amountInstructs: 5,
     bound: BoundType.CPU,
-    colorHex: '#00A',
+    colorHex: '#f44336',
     dateCreation: new Date(),
     state: "READY",
     pc: 0,

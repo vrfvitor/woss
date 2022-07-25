@@ -1,0 +1,40 @@
+.card {
+  background: #424242;
+  color: white;
+  height: 48vh;
+
+  mat-card-content {
+    height: 80%;
+    overflow-y: overlay;
+
+    tr.mat-header-row {
+      height: 30px;
+    }
+
+    .mat-column-state {
+      flex: 0 0 30%;
+      min-width: 200px;
+    }
+
+    .color-header {
+      height: 16px;
+      width: 17px;
+      background: #959595;
+      text-align: center;
+      border-radius: 50%;
+      color: white;
+      padding-bottom: 18px;
+    }
+  }
+
+  mat-card-actions {
+    border-top: 1px solid #595959;
+  }
+}
+
+
+
+
+
+
+

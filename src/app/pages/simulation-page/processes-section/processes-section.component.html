@@ -2,12 +2,47 @@
   <div class="card-header">
     PROCESSES
   </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item d-flex flex-column mt-2" *ngFor="let process of processes">
-      <span [style.color]="process.colorHex">{{process.name}}</span>
-      <span>{{process.state}}</span>
-      <span>PC: {{process.pc}} | Priority: {{process.priority}}</span>
-      <span></span>
-    </li>
-  </ul>
+
+  <mat-card-content class="nice-scroll-bar">
+    <div *ngIf="!processes?.length; else processesTemplate" class="text-center mt-4 opacity-75">
+      No process yet created.
+    </div>
+
+    <ng-template #processesTemplate>
+      <table mat-table *ngIf="processes" [dataSource]="processes" class="w-100">
+        <!-- Color Column -->
+        <ng-container matColumnDef="colorHex">
+          <th mat-header-cell *matHeaderCellDef><div class="color-header">C</div></th>
+          <td mat-cell *matCellDef="let process">
+            <div style="height: 15px; width: 15px; border-radius: 8px;" [style.background]="process.colorHex"></div>
+          </td>
+        </ng-container>
+
+        <!-- PID Column -->
+        <ng-container matColumnDef="pid">
+          <th mat-header-cell *matHeaderCellDef>PID</th>
+          <td mat-cell *matCellDef="let process"> {{process.pid}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>NAME</th>
+          <td mat-cell *matCellDef="let process"> {{process.name}} </td>
+        </ng-container>
+
+        <!-- State Column -->
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>STATE</th>
+          <td mat-cell *matCellDef="let process"> {{process.state}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </ng-template>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button class="m-2" color="accent">New Process</button>
+  </mat-card-actions>
 </div>
