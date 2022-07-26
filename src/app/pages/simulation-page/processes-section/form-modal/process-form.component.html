@@ -1,0 +1,49 @@
+<h1 mat-dialog-title>New Process</h1>
+<div mat-dialog-content>
+  <form [formGroup]="processForm">
+    <mat-form-field color="accent" class="w-100 mr-2 mb-2">
+      <mat-label>Color</mat-label>
+      <input matInput type="color" formControlName="colorHex" name="colorHex">
+    </mat-form-field>
+
+    <mat-form-field color="accent" class="w-100 mr-2 mb-2">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" name="name">
+      <mat-error *ngIf="processForm.get('name')?.errors">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field color="accent" class="w-100 mr-2 mb-2">
+      <mat-label>Priority</mat-label>
+      <input matInput formControlName="priority" name="priority">
+      <mat-error *ngIf="processForm.get('priority')?.errors">Priority is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field color="accent" class="w-100 mr-2 mb-2">
+      <mat-label>Amount of Instructions</mat-label>
+      <input matInput formControlName="amountInstructs" name="amountInstructs">
+      <mat-error *ngIf="processForm.get('amountInstructs')?.errors">Amount of instructions is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field color="accent" class="w-100 mr-2 mb-2">
+      <mat-label>Bound</mat-label>
+      <mat-select formControlName="bound">
+        <mat-option *ngFor="let bound of boundTypes" [value]="bound">{{bound.toString()}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="processForm.get('bound')?.errors">Bound is required</mat-error>
+    </mat-form-field>
+
+  </form>
+</div>
+<div mat-dialog-actions class="mb-1 d-flex justify-content-end">
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <div
+    class="ms-2"
+    matTooltip="All fields are required"
+    matTooltipPosition="before"
+    [matTooltipDisabled]="!processForm.invalid"
+  >
+    <button mat-raised-button color="accent" [disabled]="processForm.invalid" (click)="getProcess($event)">
+      {{ "Create" }}
+    </button>
+  </div>
+</div>

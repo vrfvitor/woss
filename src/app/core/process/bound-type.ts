@@ -9,6 +9,10 @@ export default class BoundType {
     public readonly delayFactor: number
   ) { }
 
+  static values() {
+    return [BoundType.CPU, BoundType.IO_DISC, BoundType.IO_TAPE, BoundType.IO_TERMINAL]
+  }
+
   toString() {
     return this.key;
   }
