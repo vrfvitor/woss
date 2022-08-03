@@ -24,13 +24,18 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { CpuSectionComponent } from "./pages/simulation-page/cpu-section/cpu-section.component";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatSliderModule } from "@angular/material/slider";
 
 @NgModule({
   declarations: [
     AppComponent,
     SimulationPageComponent,
     ProcessesSectionComponent,
-    ProcessFormComponent
+    ProcessFormComponent,
+    CpuSectionComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,10 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatSelectModule,
     MatInputModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatDividerModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

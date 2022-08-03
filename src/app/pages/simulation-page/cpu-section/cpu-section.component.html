@@ -1,0 +1,70 @@
+<div class="card">
+  <div class="card-header">CPU</div>
+
+  <mat-card-content class="d-flex flex-column justify-content-between h-100">
+    <!-- PROCESSES & EXECUTION-->
+    <section class="p-1 d-flex align-items-center justify-content-between" style="height: 55%">
+      <div class="w-50 h-100 px-2 d-flex flex-column justify-content-around align-items-end">
+        <div class="priority-group d-flex flex-row-reverse justify-content-start align-items-center">
+          <div class="indicator px-2 ms-2">NEXT</div>
+          <div *ngFor="let process of processes"
+               class="box rounded-circle content-centered my-0 ms-1 h-75"
+               [style.background-color]="process.colorHex">
+            <small class="font-monospace" style="font-size: smaller">{{process?.priority}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="w-50 h-100 p-2 d-flex align-items-center justify-content-end">
+        <div class="rounded-circle content-centered h-100 my-0"
+             [class.empty-effect]="!executing"
+             [style.background-color]="executing?.colorHex"
+             style="aspect-ratio: 1/1"></div>
+      </div>
+    </section>
+    <mat-divider></mat-divider>
+
+    <!-- IO-QUEUE -->
+    <section id="io-queue" class="px-1 py-2 ps-3 d-flex justify-content-between align-items-center"
+             style="color: white; height: 20%">
+
+      <div class="d-flex flex-column justify-content-around w-75 h-100 align-items-center">
+        <div>IO QUEUE</div>
+        <div class="h-75 w-100 queue d-flex flex-row-reverse justify-content-start align-items-center">
+          <div *ngFor="let process of ioQueue"
+               class="box rounded-circle h-100 my-0 ms-1"
+               [style.background-color]="process.colorHex">
+          </div>
+        </div>
+      </div>
+      <div class="w-25 h-100">
+        <div class="mx-auto my-0 w-50 h-100 d-flex flex-column align-items-center justify-content-between">
+          <div
+            class="d-flex flex-column align-items-center justify-content-center rounded-circle my-0"
+            [class.empty-effect]="!ioExecuting"
+            [style.background-color]="ioExecuting?.colorHex"
+            style="aspect-ratio: 1/1; height: 80%">
+            <small style="color: #d3d3d3" *ngIf="!ioExecuting">none</small>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="ioProgress" class="rounded"></mat-progress-bar>
+        </div>
+      </div>
+    </section>
+    <mat-divider></mat-divider>
+
+    <!-- CONTROLS -->
+    <section class="py-2 d-flex align-items-center justify-content-around" style="height: 25%">
+      <div class="time-control" matTooltip="I/O Waiting Time" matTooltipPosition="after">
+        <img src="assets/icons/hourglass.png" alt="I/O Waiting Time"/>
+        <mat-slider max="5" min="1" step="1" value="3"></mat-slider>
+      </div>
+      <div class="time-control" matTooltip="CPU TimeSlice (Quantum)" matTooltipPosition="after">
+        <img src="assets/icons/timeslice.png" alt="CPU TimeSlice (Quantum)"/>
+        <mat-slider max="5" min="1" step="1" value="3"></mat-slider>
+      </div>
+      <div class="time-control" matTooltip="CPU Clock" matTooltipPosition="after">
+        <img src="assets/icons/clock.png" alt="CPU Clock"/>
+        <mat-slider max="5" min="1" step="1" value="3"></mat-slider>
+      </div>
+    </section>
+  </mat-card-content>
+</div>

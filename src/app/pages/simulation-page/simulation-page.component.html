@@ -9,8 +9,8 @@
              style="background: #2f3a50; color: white">
       <span>COUNTER</span>
       <div>
-        <button class="mx-2 btn-primary" (click)="onStart()">PLAY/PAUSE</button>
-        <button class="btn-danger disabled" disabled>RESTART</button>
+        <button class="mx-2" mat-flat-button color="accent" (click)="onStart()">PLAY/PAUSE</button>
+        <button class="btn-danger" color="primary" mat-flat-button [disabled]="true">RESTART</button>
       </div>
     </section>
 
@@ -18,9 +18,10 @@
       <ul class="nav nav-pills nav-flush flex-column mb-auto text-center dark"
           style="background: #d1d1d1; border-radius: 6px;">
         <li class="nav-item">
-          <a (click)="openModal(settings)" class="nav-link active py-3 border-bottom"
-             style="border-radius: 6px 0 0 6px; background: #d1d1d1">
-            <img src="assets/icons/gear.png" alt="Settings" style="height: 25px"/>
+          <a (click)="openModal(settings)"
+             class="nav-link active py-3 border-bottom d-flex align-items-center justify-content-center"
+             style="border-radius: 6px 0 0 6px; background: #d1d1d1; width: 42px; height: 42px">
+            <img src="assets/icons/gear.png" alt="Settings" style="height: 20px"/>
           </a>
         </li>
       </ul>
@@ -34,7 +35,7 @@
         </button>
       </div>
       <h5 class="modal-title mx-3 mt-3">Scheduling Algorithm</h5>
-      <form [formGroup]="settingsForm" >
+      <form [formGroup]="settingsForm">
         <div class="modal-body">
           <div class="form-check">
             <input class="form-check-input" type="radio" value="fifo" id="checkFIFO" formControlName="schedulingAlgo">
@@ -43,13 +44,15 @@
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" value="roundRobin" id="checkRoundRobin" formControlName="schedulingAlgo">
+            <input class="form-check-input" type="radio" value="roundRobin" id="checkRoundRobin"
+                   formControlName="schedulingAlgo">
             <label class="form-check-label" for="checkRoundRobin">
               Round Robin
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" value="preemptivePriority" id="checkPreemptivePriority" formControlName="schedulingAlgo">
+            <input class="form-check-input" type="radio" value="preemptivePriority" id="checkPreemptivePriority"
+                   formControlName="schedulingAlgo">
             <label class="form-check-label" for="checkPreemptivePriority">
               Preemptive Priority
             </label>
@@ -61,14 +64,12 @@
       </div>
     </ng-template>
 
-    <div id="main" class="mt-2 container-fluid px-4 py-4" style="padding-right: 3rem !important">
+    <div id="main" class="mt-2 container-fluid px-4 pt-1" style="padding-right: 3rem !important">
 
-      <div class="row">
+      <div class="row me-1">
         <app-processes-section class="col" [processes]="processes$ | async"></app-processes-section>
 
-        <div class="mt-3 col" style="color: white">
-          IO COUNTER: {{ ioProgress$ | async }}
-        </div>
+        <app-cpu-section class="col" [store]="store" [ioQueue$]="ioQueue$"></app-cpu-section>
       </div>
     </div>
   </div>

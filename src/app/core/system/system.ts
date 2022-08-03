@@ -35,7 +35,7 @@ export default class System {
 
   async init() {
     while (this.isExecuting) {
-      await this.timerOf(200)
+      await this.timerOf(800)
       const nextProcess = await this.scheduleNextProcess()
       await this.cpu.execute(nextProcess!)
     }

@@ -4,6 +4,10 @@
   background-color: #1b2531 !important
 }
 
+.base-color {
+  background-color: #292d43 !important
+}
+
 html, body {
   height: 100%;
 }
@@ -31,4 +35,8 @@ body {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
   background-color: #555;
+}
+
+.box {
+  aspect-ratio: 1/1;
 }

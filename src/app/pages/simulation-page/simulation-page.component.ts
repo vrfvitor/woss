@@ -3,7 +3,7 @@ import { map, Observable } from "rxjs";
 import Process from "../../core/process/process";
 import System from "../../core/system/system";
 import { Store } from "@ngrx/store";
-import { selectIoQueueProgress, selectProcesses } from "../../state/processes.selectors";
+import { selectIoQueue, selectIoQueueProgress, selectProcesses } from "../../state/processes.selectors";
 import BoundType from "../../core/process/bound-type";
 import { addProcess, setupSchedulingAlgo } from "../../state/processes/process-management.actions";
 import { PreemptivePriority } from "../../core/cpu/scheduler/preemptive-priority";
@@ -11,6 +11,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { FIFO } from "../../core/cpu/scheduler/fifo";
 import { RoundRobin } from "../../core/cpu/scheduler/round-robin";
+import { IoQueueState } from "../../state/io-queue/io-queue.reducer";
 
 const byDate = (a: Process, b: Process) => (a.pid - b.pid)
 
@@ -69,12 +70,13 @@ export const PROCESSES: Process[] = [
 export class SimulationPageComponent implements OnInit {
 
   processes$!: Observable<Process[]>
+  ioQueue$!: Observable<IoQueueState>
   ioProgress$!: Observable<number>
   modalRef!: BsModalRef
   settingsForm!: FormGroup
 
   constructor(
-    private store: Store,
+    public store: Store,
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
   ) {
@@ -83,6 +85,7 @@ export class SimulationPageComponent implements OnInit {
   ngOnInit(): void {
     this.processes$ = this.store.select(selectProcesses)
       .pipe(map(pcs => [...pcs].sort(byDate)))
+    this.ioQueue$ = this.store.select(selectIoQueue)
     this.ioProgress$ = this.store.select(selectIoQueueProgress)
     this.settingsForm = this.formBuilder.group({
       schedulingAlgo: ['fifo', Validators.required]

@@ -1,0 +1,64 @@
+@import "bootstrap/scss/bootstrap";
+
+.card {
+  background: #424242;
+  color: white;
+  height: 54vh;
+
+  .empty-effect {
+    background: repeating-linear-gradient(45deg, #2c264400, #5F6DBB)
+  }
+
+  mat-card-content {
+    height: 100%;
+
+    .priority-group {
+      .indicator {
+        width: fit-content;
+        padding: 0 2px;
+        background-color: #595959;
+      }
+    }
+
+    #io-queue {
+      .queue {
+        max-height: 30px;
+        border: 2px solid #595959;
+        border-radius: 5rem;
+        padding: 4px;
+        width: 73%;
+      }
+    }
+
+    .content-centered {
+      @extend .d-flex;
+      @extend .flex-column;
+      @extend .align-items-center;
+      @extend .justify-content-center;
+    }
+
+    .time-control {
+      @extend .h-100;
+      @extend .d-flex;
+      @extend .flex-column;
+      @extend .align-items-center;
+      @extend .justify-content-around;
+
+      img {
+        height: 1.7rem;
+      }
+
+      mat-slider {
+        margin-top: -15px;
+        height: 50%;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
