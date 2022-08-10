@@ -28,6 +28,9 @@ import { CpuSectionComponent } from "./pages/simulation-page/cpu-section/cpu-sec
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSliderModule } from "@angular/material/slider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatChipsModule } from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -57,7 +60,10 @@ import { MatSliderModule } from "@angular/material/slider";
     MatSnackBarModule,
     MatProgressBarModule,
     MatDividerModule,
-    MatSliderModule
+    MatSliderModule,
+    MatIconModule,
+    MatTabsModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

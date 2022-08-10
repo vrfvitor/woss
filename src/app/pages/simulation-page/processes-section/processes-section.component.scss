@@ -3,6 +3,35 @@
   color: white;
   height: 54vh;
 
+  :host ::ng-deep .mat-sort-header-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .back-button {
+    background: #b3b3b3;
+    border-radius: 0 0 6px;
+    min-width: 50px;
+    min-height: 40px;
+    padding: 0 0 !important;
+    color: white;
+  }
+
+  th.mat-header-cell, td.mat-cell {
+    text-align: center;
+  }
+
+  .mat-tab-body-wrapper{
+    flex-grow: 1;
+  }
+
+  .element {
+    width: 90%;
+    padding: 4px 8px;
+    background: #b3b3b36b;
+    border-radius: 3px;
+  }
+
   mat-card-content {
     height: 80%;
     overflow-y: overlay;

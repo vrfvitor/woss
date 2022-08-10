@@ -1,9 +1,17 @@
 <div id="page-container">
 
   <div id="content-wrap">
-    <header>
+    <header class="d-flex align-items-center justify-content-between px-2">
       <span>WOSS</span>
+      <mat-select style="max-width: 40px" placeholder="EN">
+        <mat-option>EN</mat-option>
+        <mat-option>PT</mat-option>
+      </mat-select>
     </header>
+
+    <div class="position-fixed bottom-0 py-1 px-3 mat-app-background" style="bottom: 0; left:6vw; color: white; border-radius: 4px 4px 0 0">
+      Logs
+    </div>
 
     <section class="sim-controls mt-3 mx-3 my-3 rounded p-3 d-flex justify-content-between align-items-center"
              style="background: #2f3a50; color: white">

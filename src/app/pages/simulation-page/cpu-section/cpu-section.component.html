@@ -15,10 +15,11 @@
         </div>
       </div>
       <div class="w-50 h-100 p-2 d-flex align-items-center justify-content-end">
-        <div class="rounded-circle content-centered h-100 my-0"
+        <div class="box rounded-circle content-centered h-100 my-0"
              [class.empty-effect]="!executing"
-             [style.background-color]="executing?.colorHex"
-             style="aspect-ratio: 1/1"></div>
+             [style.background-color]="executing?.colorHex">
+          <small *ngIf="!executing">executing</small>
+        </div>
       </div>
     </section>
     <mat-divider></mat-divider>

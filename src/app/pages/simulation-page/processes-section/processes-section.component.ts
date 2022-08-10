@@ -13,8 +13,9 @@ import { addProcess } from "../../../state/processes/process-management.actions"
 })
 export class ProcessesSectionComponent implements OnInit {
 
-  displayedColumns: string[] = ['colorHex', 'pid', 'name', 'state'];
+  displayedColumns: string[] = ['colorHex', 'pid', 'name', 'state', 'actions'];
   @Input() processes!: Process[] | null;
+  selectedProcess!: Process | null;
 
   constructor(
     private dialog: MatDialog,
